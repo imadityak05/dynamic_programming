@@ -1,0 +1,26 @@
+<-- Problem Statement -->
+ You are given a 0-indexed m x n integer matrix grid and an integer k. You are currently at position (0, 0) and you want to reach position (m - 1, n - 1) moving only down or right.
+Return the number of paths where the sum of the elements on the path is divisible by k. Since the answer may be very large, return it modulo 109 + 7.
+
+code:
+
+class Solution {
+    const int MOD = 1000000007;  
+    int memo(int i , int j ,int sum , vector<vector<int>>& grid , vector<vector<vector<int>>>& dp , int k){
+        if(i < 0 || j < 0) return 0;
+        sum = (sum + grid[i][j]) % k;
+        if(i == 0 && j == 0) return sum == 0 ? 1 : 0;
+        if(dp[i][j][sum] != -1) return dp[i][j][sum];
+        int up = memo(i, j - 1, sum, grid, dp, k);
+        int left = memo(i - 1, j, sum, grid, dp, k);
+        return dp[i][j][sum] = (up + left) % MOD;
+    }
+public:
+    int numberOfPaths(vector<vector<int>>& grid, int k) {
+        int m = grid.size();
+        int n = grid[0].size();
+        vector<vector<vector<int>>> dp(m, vector<vector<int>>(n, vector<int>(k, -1)));
+        return memo(m - 1, n - 1, 0, grid, dp, k);
+    }
+};
+
